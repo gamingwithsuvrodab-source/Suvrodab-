@@ -282,3 +282,89 @@ setInterval(loadLive, 20000);
 
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #dff0d8;
+            padding: 50px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        p {
+            font-size: 18px;
+            color: #333;
+        }
+        #scoreboard {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple Cricket Game</h1>
+    <p>Click "Hit Ball" to play!</p>
+    <button onclick="hitBall()">Hit Ball</button>
+    <button onclick="resetGame()">Reset Game</button>
+
+    <div id="scoreboard">
+        Runs: 0 | Balls: 0 | Wickets: 0
+    </div>
+
+    <script>
+        let runs = 0;
+        let balls = 0;
+        let wickets = 0;
+        const maxWickets = 3;
+        const maxBalls = 6;
+
+        function hitBall() {
+            if (balls >= maxBalls || wickets >= maxWickets) {
+                alert("Game Over! Please reset.");
+                return;
+            }
+
+            balls++;
+            const outcome = Math.floor(Math.random() * 7); // 0-6
+            if (outcome === 0) {
+                wickets++;
+                alert("Oh no! You lost a wicket.");
+            } else {
+                runs += outcome;
+                alert(`You scored ${outcome} run(s)!`);
+            }
+            updateScoreboard();
+
+            if (balls === maxBalls || wickets === maxWickets) {
+                alert(`Game Over! Total Runs: ${runs}`);
+            }
+        }
+
+        function updateScoreboard() {
+            document.getElementById("scoreboard").innerHTML = `Runs: ${runs} | Balls: ${balls} | Wickets: ${wickets}`;
+        }
+
+        function resetGame() {
+            runs = 0;
+            balls = 0;
+            wickets = 0;
+            updateScoreboard();
+            alert("Game reset! Start again.");
+        }
+    </script>
+</body>
+</html>
