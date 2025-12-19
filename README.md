@@ -2,145 +2,247 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>Tap Bot with Messages</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tap Tap Hamster 🐹</title>
+
 <style>
-    body {
-        font-family: 'Arial', sans-serif;
-        background: linear-gradient(to bottom, #fff7e6, #ffe6b3);
-        text-align: center;
-        margin: 0;
-        padding: 0;
-    }
-    h1, h2, h3 {
-        color: #333;
-    }
-    #loginBox, #gameBox {
-        margin-top: 50px;
-    }
-    #hamsterImg {
-        width: 200px;
-        cursor: pointer;
-        transition: transform 0.1s;
-        margin-top: 20px;
-    }
-    #hamsterImg:active {
-        transform: scale(0.9);
-    }
-    button {
-        padding: 10px 20px;
-        margin: 10px;
-        font-size: 16px;
-        cursor: pointer;
-        border-radius: 8px;
-        border: none;
-        background-color: #ffcc66;
-        transition: 0.2s;
-    }
-    button:hover {
-        background-color: #ffb84d;
-    }
-    #balance {
-        font-size: 24px;
-        margin-top: 20px;
-        color: #ff6600;
-    }
-    input {
-        padding: 10px;
-        font-size: 16px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
-    }
-    #supportBox {
-        margin-top: 30px;
-        max-width: 300px;
-        margin-left: auto;
-        margin-right: auto;
-        text-align: left;
-    }
-    #supportLog {
-        background: #fff4e6;
-        border: 1px solid #ffcc99;
-        padding: 10px;
-        border-radius: 8px;
-        height: 120px;
-        overflow-y: auto;
-    }
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#0b0f1a;
+    color:#fff;
+}
+
+/* Pages */
+.page{ display:none; padding-bottom:80px; }
+.active{ display:block; }
+
+/* Header */
+.header{
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.coin-box{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.coin{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:gold;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#b8860b;
+    font-weight:bold;
+}
+
+/* Tap */
+.main{
+    text-align:center;
+    margin-top:30px;
+}
+
+.tap-circle{
+    width:220px;
+    height:220px;
+    border-radius:50%;
+    background:radial-gradient(circle,#2563eb,#020617);
+    margin:auto;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    box-shadow:0 0 40px rgba(37,99,235,.6);
+    cursor:pointer;
+}
+
+.tap-circle img{ width:140px; }
+
+/* Cards */
+.card{
+    background:#1f2937;
+    margin:15px;
+    padding:15px;
+    border-radius:15px;
+}
+
+/* Dashboard */
+.stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.stat{
+    background:#111827;
+    padding:15px;
+    border-radius:12px;
+    text-align:center;
+}
+
+/* Messages */
+.message{
+    background:#111827;
+    padding:12px;
+    margin:10px 15px;
+    border-radius:12px;
+}
+
+.message small{
+    opacity:0.6;
+}
+
+/* Profile */
+.profile h2{ text-align:center; }
+
+.option{
+    background:#1f2937;
+    margin:10px;
+    padding:15px;
+    border-radius:12px;
+}
+
+/* Bottom Nav */
+.nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:#020617;
+    display:flex;
+    justify-content:space-around;
+    padding:10px 0;
+    border-top:1px solid #1f2937;
+}
+
+.nav div{
+    cursor:pointer;
+    opacity:0.6;
+    font-size:14px;
+}
+
+.nav .active-tab{
+    opacity:1;
+    color:#38bdf8;
+}
 </style>
 </head>
+
 <body>
 
-<div id="loginBox">
-    <h1>Welcome to Tap Tap Hamster 🐹</h1>
-    <input type="text" id="username" placeholder="Enter your username"><br><br>
-    <button onclick="login()">Login</button>
-</div>
+<!-- HOME -->
+<div id="home" class="page active">
+    <div class="header">
+        <div class="coin-box">
+            <div class="coin">$</div>
+            <div id="coins">0</div>
+        </div>
+        <div>Level 7</div>
+    </div>
 
-<div id="gameBox" style="display:none;">
-    <h2>Hello, <span id="userDisplay"></span>!</h2>
-    <img id="hamsterImg" src="https://i.imgur.com/OaGm6kZ.png" alt="Hamster" onclick="tapHamster()">
-    <div id="balance">Coins: 0</div>
-
-    <div id="supportBox">
-        <h3>Support</h3>
-        <input type="text" id="supportMsg" placeholder="Type your message">
-        <button onclick="sendSupport()">Send</button>
-        <div id="supportLog"></div>
+    <div class="main">
+        <p>Tap to Earn</p>
+        <div class="tap-circle" onclick="addCoin()">
+            <img src="https://i.imgur.com/4AiXzf8.png">
+        </div>
     </div>
 </div>
 
+<!-- DASHBOARD -->
+<div id="dashboard" class="page">
+    <h2 style="text-align:center;">📊 Dashboard</h2>
+
+    <div class="card stats">
+        <div class="stat">
+            <h3 id="dCoins">0</h3>
+            <p>Total Coins</p>
+        </div>
+        <div class="stat">
+            <h3>+1</h3>
+            <p>Tap Power</p>
+        </div>
+        <div class="stat">
+            <h3>7 / 10</h3>
+            <p>Level</p>
+        </div>
+        <div class="stat">
+            <h3>Legendary</h3>
+            <p>Status</p>
+        </div>
+    </div>
+</div>
+
+<!-- MESSAGES -->
+<div id="messages" class="page">
+    <h2 style="text-align:center;">💬 Messages</h2>
+
+    <div class="message">
+        <b>System</b><br>
+        Welcome to Tap Bot 🎉  
+        <br><small>Today</small>
+    </div>
+
+    <div class="message">
+        <b>Reward Bot</b><br>
+        You received +100 bonus coins 💰  
+        <br><small>Yesterday</small>
+    </div>
+
+    <div class="message">
+        <b>Admin</b><br>
+        New update coming soon 🚀  
+        <br><small>2 days ago</small>
+    </div>
+</div>
+
+<!-- PROFILE -->
+<div id="profile" class="page profile">
+    <h2>👤 ChatGPT Bot</h2>
+    <p style="text-align:center;">Tap-to-Earn Player</p>
+
+    <div class="option">💰 Coins: <span id="pCoins">0</span></div>
+    <div class="option">🏆 Level: 7</div>
+    <div class="option">💬 Messages</div>
+    <div class="option">🛒 Shop</div>
+    <div class="option">⚙ Settings</div>
+    <div class="option">🚪 Logout</div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+    <div onclick="openPage('home',this)" class="active-tab">🏠 Home</div>
+    <div onclick="openPage('dashboard',this)">📊 Dashboard</div>
+    <div onclick="openPage('messages',this)">💬 Messages</div>
+    <div onclick="openPage('profile',this)">👤 Profile</div>
+</div>
+
 <script>
-// =====================
-// Variables
-// =====================
 let coins = 0;
-let username = '';
 
-// =====================
-// Login Function
-// =====================
-function login() {
-    username = document.getElementById('username').value.trim();
-    if(username === '') {
-        alert("Please enter a username!");
-        return;
-    }
-    // Load coins from localStorage
-    coins = parseInt(localStorage.getItem(username)) || 0;
-    document.getElementById('userDisplay').innerText = username;
-    document.getElementById('balance').innerText = "Coins: " + coins;
-    document.getElementById('loginBox').style.display = "none";
-    document.getElementById('gameBox').style.display = "block";
+function addCoin(){
+    coins++;
+    document.getElementById("coins").innerText = coins;
 }
 
-// =====================
-// Hamster Tap Function
-// =====================
-function tapHamster() {
-    coins += 1; // Increase coins per tap
-    document.getElementById('balance').innerText = "Coins: " + coins;
-    localStorage.setItem(username, coins);
+function openPage(id,el){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
 
-    // Small animation
-    const hamster = document.getElementById('hamsterImg');
-    hamster.style.transform = "scale(1.1)";
-    setTimeout(() => { hamster.style.transform = "scale(1)"; }, 100);
-}
+    document.querySelectorAll('.nav div').forEach(n=>n.classList.remove('active-tab'));
+    el.classList.add('active-tab');
 
-// =====================
-// Support System
-// =====================
-function sendSupport() {
-    const msg = document.getElementById('supportMsg').value.trim();
-    if(msg === '') return;
-    const log = document.getElementById('supportLog');
-    const p = document.createElement('p');
-    p.innerText = username + ": " + msg;
-    log.appendChild(p);
-    log.scrollTop = log.scrollHeight;
-    document.getElementById('supportMsg').value = '';
+    document.getElementById("dCoins").innerText = coins;
+    document.getElementById("pCoins").innerText = coins;
 }
 </script>
 
 </body>
-</html>
+</html>/tap-bot
+ ├─ index.html
+ └─ bot.png
