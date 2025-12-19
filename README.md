@@ -3,17 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Orange Dashboard</title>
+<title>Hamster Dashboard</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
 body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
     background:#0b1220;
     color:#fff;
 }
@@ -22,25 +17,30 @@ body{
 .header{
     background:linear-gradient(135deg,#00c6ff,#0072ff);
     padding:25px;
-    border-bottom-left-radius:25px;
-    border-bottom-right-radius:25px;
     text-align:center;
+    border-radius:0 0 25px 25px;
 }
 
-.profile img{
+.avatar{
     width:90px;
     height:90px;
     border-radius:50%;
     border:4px solid #fff;
+    margin:auto;
+    background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#0072ff;
+    font-size:32px;
+    font-weight:bold;
 }
 
-.profile h2{
-    margin-top:10px;
-    font-size:22px;
+.header h2{
+    margin:10px 0 5px;
 }
 
 .balance{
-    margin-top:5px;
     font-size:18px;
     font-weight:bold;
 }
@@ -48,26 +48,39 @@ body{
 /* Cards */
 .cards{
     display:grid;
-    grid-template-columns:repeat(2,1fr);
+    grid-template-columns:1fr 1fr;
     gap:15px;
     padding:20px;
 }
 
 .card{
     background:#131c33;
-    border-radius:15px;
     padding:20px;
+    border-radius:15px;
     text-align:center;
 }
 
-.card h4{
-    font-size:14px;
-    color:#8fa3c8;
-    margin-bottom:10px;
+.card span{
+    font-size:13px;
+    color:#9fb3d9;
 }
 
-.card p{
+.card h3{
+    margin-top:10px;
     font-size:22px;
+}
+
+/* Button */
+.btn{
+    width:90%;
+    margin:10px auto;
+    display:block;
+    padding:12px;
+    border:none;
+    border-radius:12px;
+    background:#00c6ff;
+    color:#000;
+    font-size:16px;
     font-weight:bold;
 }
 
@@ -82,14 +95,12 @@ body{
     padding:10px 0;
 }
 
-.nav a{
+.nav div{
     color:#8fa3c8;
-    text-decoration:none;
     font-size:14px;
-    text-align:center;
 }
 
-.nav a.active{
+.nav .active{
     color:#00c6ff;
 }
 </style>
@@ -97,45 +108,66 @@ body{
 
 <body>
 
-<!-- Header -->
 <div class="header">
-    <div class="profile">
-        <img src="https://i.ibb.co/2yZ3Z0X/profile.png">
-        <h2>Suvrodab Chatterzyee</h2>
-        <div class="balance">Main Balance: 650.00 TK</div>
-    </div>
+    <div class="avatar">S</div>
+    <h2 id="username">Suvrodab Chatterzyee</h2>
+    <div class="balance">Main Balance: <span id="balance">650</span> TK</div>
 </div>
 
-<!-- Cards -->
 <div class="cards">
     <div class="card">
-        <h4>TODAY'S ADS</h4>
-        <p>0 / 10</p>
+        <span>TODAY'S ADS</span>
+        <h3><span id="todayAds">0</span> / 10</h3>
     </div>
 
     <div class="card">
-        <h4>TOTAL REFERRALS</h4>
-        <p>1</p>
+        <span>TOTAL REFERRALS</span>
+        <h3 id="referrals">1</h3>
     </div>
 
     <div class="card">
-        <h4>TOTAL ADS WATCHED</h4>
-        <p>10</p>
+        <span>TOTAL ADS WATCHED</span>
+        <h3 id="totalAds">10</h3>
     </div>
 
     <div class="card">
-        <h4>TOTAL INCOME</h4>
-        <p>300.00</p>
+        <span>TOTAL INCOME</span>
+        <h3><span id="income">300</span> TK</h3>
     </div>
 </div>
 
-<!-- Bottom Navigation -->
+<button class="btn" onclick="watchAd()">▶ Watch Ad</button>
+
 <div class="nav">
-    <a href="#" class="active">Home</a>
-    <a href="#">Tasks</a>
-    <a href="#">Support</a>
-    <a href="#">Profile</a>
+    <div class="active">Home</div>
+    <div onclick="alert('Tasks page coming soon')">Tasks</div>
+    <div onclick="alert('Support page')">Support</div>
+    <div onclick="alert('Profile page')">Profile</div>
 </div>
+
+<script>
+let balance = 650;
+let todayAds = 0;
+let totalAds = 10;
+let income = 300;
+
+function watchAd(){
+    if(todayAds >= 10){
+        alert("Today's ad limit finished!");
+        return;
+    }
+
+    todayAds++;
+    totalAds++;
+    balance += 10;
+    income += 10;
+
+    document.getElementById("todayAds").innerText = todayAds;
+    document.getElementById("totalAds").innerText = totalAds;
+    document.getElementById("balance").innerText = balance;
+    document.getElementById("income").innerText = income;
+}
+</script>
 
 </body>
 </html>
