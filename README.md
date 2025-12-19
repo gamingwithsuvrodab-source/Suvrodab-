@@ -2,142 +2,140 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Hamster Earn Coin</title>
-
-<!-- Telegram WebApp SDK -->
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orange Dashboard</title>
 
 <style>
 *{
-  box-sizing:border-box;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
+
 body{
-  margin:0;
-  height:100vh;
-  background:linear-gradient(135deg,#020617,#020617);
-  color:#fff;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-family:Arial, sans-serif;
+    background:#0b1220;
+    color:#fff;
 }
-.app{
-  width:90%;
-  max-width:360px;
-  background:#020617;
-  padding:25px;
-  border-radius:20px;
-  box-shadow:0 0 25px rgba(34,197,94,0.35);
-  text-align:center;
+
+/* Header */
+.header{
+    background:linear-gradient(135deg,#00c6ff,#0072ff);
+    padding:25px;
+    border-bottom-left-radius:25px;
+    border-bottom-right-radius:25px;
+    text-align:center;
 }
-h1{
-  margin:5px 0 15px;
+
+.profile img{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    border:4px solid #fff;
 }
-.user{
-  font-size:14px;
-  opacity:.8;
-  margin-bottom:10px;
+
+.profile h2{
+    margin-top:10px;
+    font-size:22px;
 }
-.coins{
-  font-size:24px;
-  margin:15px 0;
+
+.balance{
+    margin-top:5px;
+    font-size:18px;
+    font-weight:bold;
 }
-button{
-  width:100%;
-  padding:14px;
-  margin-top:10px;
-  font-size:17px;
-  border:none;
-  border-radius:12px;
-  cursor:pointer;
+
+/* Cards */
+.cards{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+    padding:20px;
 }
-.earn{
-  background:#22c55e;
-  color:#000;
+
+.card{
+    background:#131c33;
+    border-radius:15px;
+    padding:20px;
+    text-align:center;
 }
-.daily{
-  background:#0ea5e9;
-  color:#000;
+
+.card h4{
+    font-size:14px;
+    color:#8fa3c8;
+    margin-bottom:10px;
 }
-.reset{
-  background:#ef4444;
-  color:#fff;
+
+.card p{
+    font-size:22px;
+    font-weight:bold;
 }
-button:active{
-  transform:scale(.97);
+
+/* Bottom Nav */
+.nav{
+    position:fixed;
+    bottom:0;
+    width:100%;
+    background:#0f172a;
+    display:flex;
+    justify-content:space-around;
+    padding:10px 0;
+}
+
+.nav a{
+    color:#8fa3c8;
+    text-decoration:none;
+    font-size:14px;
+    text-align:center;
+}
+
+.nav a.active{
+    color:#00c6ff;
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
-  <h1>🐹 Earn Coin</h1>
-  <div class="user" id="user">Loading user...</div>
-
-  <div class="coins">
-    Coins: <span id="coins">0</span>
-  </div>
-
-  <button class="earn" onclick="earnCoin()">Tap to Earn</button>
-  <button class="daily" onclick="dailyReward()">🎁 Daily Reward</button>
-  <button class="reset" onclick="resetAll()">Reset</button>
+<!-- Header -->
+<div class="header">
+    <div class="profile">
+        <img src="https://i.ibb.co/2yZ3Z0X/profile.png">
+        <h2>Suvrodab Chatterzyee</h2>
+        <div class="balance">Main Balance: 650.00 TK</div>
+    </div>
 </div>
 
-<script>
-// Telegram init
-Telegram.WebApp.ready();
-Telegram.WebApp.expand();
+<!-- Cards -->
+<div class="cards">
+    <div class="card">
+        <h4>TODAY'S ADS</h4>
+        <p>0 / 10</p>
+    </div>
 
-// User info
-let tgUser = Telegram.WebApp.initDataUnsafe.user;
-if(tgUser){
-  document.getElementById("user").innerText =
-    "👤 " + tgUser.first_name + " (ID: " + tgUser.id + ")";
-}else{
-  document.getElementById("user").innerText = "👤 Guest User";
-}
+    <div class="card">
+        <h4>TOTAL REFERRALS</h4>
+        <p>1</p>
+    </div>
 
-// Load coins
-let coins = parseInt(localStorage.getItem("coins")) || 0;
-document.getElementById("coins").innerText = coins;
+    <div class="card">
+        <h4>TOTAL ADS WATCHED</h4>
+        <p>10</p>
+    </div>
 
-// Earn coin
-function earnCoin(){
-  coins++;
-  save();
-}
+    <div class="card">
+        <h4>TOTAL INCOME</h4>
+        <p>300.00</p>
+    </div>
+</div>
 
-// Daily reward (24h)
-function dailyReward(){
-  let last = localStorage.getItem("dailyTime");
-  let now = Date.now();
-
-  if(!last || now - last > 86400000){
-    coins += 10;
-    localStorage.setItem("dailyTime", now);
-    save();
-    alert("🎉 You got 10 coins!");
-  }else{
-    alert("⏳ Daily reward already claimed!");
-  }
-}
-
-// Save
-function save(){
-  localStorage.setItem("coins", coins);
-  document.getElementById("coins").innerText = coins;
-}
-
-// Reset
-function resetAll(){
-  if(confirm("Reset all data?")){
-    coins = 0;
-    localStorage.clear();
-    save();
-  }
-}
-</script>
+<!-- Bottom Navigation -->
+<div class="nav">
+    <a href="#" class="active">Home</a>
+    <a href="#">Tasks</a>
+    <a href="#">Support</a>
+    <a href="#">Profile</a>
+</div>
 
 </body>
 </html>
