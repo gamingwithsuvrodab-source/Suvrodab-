@@ -1,93 +1,146 @@
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters, CallbackQueryHandler
-import random
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tap Tap Hamster 🐹</title>
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(to bottom, #fff7e6, #ffe6b3);
+        text-align: center;
+        margin: 0;
+        padding: 0;
+    }
+    h1, h2, h3 {
+        color: #333;
+    }
+    #loginBox, #gameBox {
+        margin-top: 50px;
+    }
+    #hamsterImg {
+        width: 200px;
+        cursor: pointer;
+        transition: transform 0.1s;
+        margin-top: 20px;
+    }
+    #hamsterImg:active {
+        transform: scale(0.9);
+    }
+    button {
+        padding: 10px 20px;
+        margin: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 8px;
+        border: none;
+        background-color: #ffcc66;
+        transition: 0.2s;
+    }
+    button:hover {
+        background-color: #ffb84d;
+    }
+    #balance {
+        font-size: 24px;
+        margin-top: 20px;
+        color: #ff6600;
+    }
+    input {
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+    #supportBox {
+        margin-top: 30px;
+        max-width: 300px;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: left;
+    }
+    #supportLog {
+        background: #fff4e6;
+        border: 1px solid #ffcc99;
+        padding: 10px;
+        border-radius: 8px;
+        height: 120px;
+        overflow-y: auto;
+    }
+</style>
+</head>
+<body>
 
-# ========================
-# Bot Commands
-# ========================
+<div id="loginBox">
+    <h1>Welcome to Tap Tap Hamster 🐹</h1>
+    <input type="text" id="username" placeholder="Enter your username"><br><br>
+    <button onclick="login()">Login</button>
+</div>
 
-# /start কমান্ড
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    keyboard = [
-        [InlineKeyboardButton("🎲 Roll Dice", callback_data='roll')],
-        [InlineKeyboardButton("🐹 Hamster Facts", callback_data='fact')],
-        [InlineKeyboardButton("🖼 Send Meme", callback_data='meme')],
-        [InlineKeyboardButton("❓ Quiz Time", callback_data='quiz')]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text(
-        "হাই! আমি Hamster বট 🐹। তোমার জন্য মজা ফিচার আছে। নিচের বাটনে ক্লিক করো!",
-        reply_markup=reply_markup
-    )
+<div id="gameBox" style="display:none;">
+    <h2>Hello, <span id="userDisplay"></span>!</h2>
+    <img id="hamsterImg" src="https://i.imgur.com/OaGm6kZ.png" alt="Hamster" onclick="tapHamster()">
+    <div id="balance">Coins: 0</div>
 
-# মেসেজ রেসপন্স (Text Echo)
-async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    responses = [
-        "😂 দারুন!", 
-        "😎 সত্যি বলছো!",
-        "🐹 আমি Hamster!",
-        "😜 মজার কথা বলছো!",
-        "🎉 মজা লাগছে!"
-    ]
-    await update.message.reply_text(random.choice(responses))
+    <div id="supportBox">
+        <h3>Support</h3>
+        <input type="text" id="supportMsg" placeholder="Type your message">
+        <button onclick="sendSupport()">Send</button>
+        <div id="supportLog"></div>
+    </div>
+</div>
 
-# Callback Query হ্যান্ডল (Inline Buttons)
-async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query
-    await query.answer()
-    
-    if query.data == "roll":
-        dice = random.randint(1, 6)
-        await query.edit_message_text(f"🎲 তুমি {dice} পেলো! আবার চাইলে /start লিখো।")
-    elif query.data == "fact":
-        facts = [
-            "Hamsters are nocturnal! 🌙",
-            "Hamsters have cheek pouches! 🐹",
-            "Hamsters can run up to 8 km in one night! 🏃",
-            "Hamsters are great escape artists! 🏰",
-            "A hamster's teeth never stop growing! 🦷"
-        ]
-        await query.edit_message_text(f"🐹 Fun Fact: {random.choice(facts)}")
-    elif query.data == "meme":
-        memes = [
-            "https://i.imgur.com/1.png",
-            "https://i.imgur.com/2.png",
-            "https://i.imgur.com/3.png"
-        ]
-        await query.edit_message_text("🖼 দেখো, মেমে! (নিচের লিংক) " + random.choice(memes))
-    elif query.data == "quiz":
-        questions = [
-            {"q": "Hamsters are nocturnal animals?", "a": "Yes"},
-            {"q": "Hamsters can fly?", "a": "No"},
-            {"q": "Hamsters store food in their cheeks?", "a": "Yes"}
-        ]
-        q = random.choice(questions)
-        keyboard = [
-            [InlineKeyboardButton("Yes", callback_data='quiz_yes')],
-            [InlineKeyboardButton("No", callback_data='quiz_no')]
-        ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        context.user_data['quiz_answer'] = q['a']
-        await query.edit_message_text(q['q'], reply_markup=reply_markup)
-    elif query.data in ["quiz_yes", "quiz_no"]:
-        answer = context.user_data.get('quiz_answer', "Yes")
-        user_choice = "Yes" if query.data == "quiz_yes" else "No"
-        if user_choice == answer:
-            await query.edit_message_text(f"🎉 Correct! উত্তর: {answer}")
-        else:
-            await query.edit_message_text(f"❌ Wrong! সঠিক উত্তর: {answer}")
+<script>
+// =====================
+// Variables
+// =====================
+let coins = 0;
+let username = '';
 
-# ========================
-# Bot Setup
-# ========================
-app = ApplicationBuilder().token("YOUR_BOT_TOKEN_HERE").build()
+// =====================
+// Login Function
+// =====================
+function login() {
+    username = document.getElementById('username').value.trim();
+    if(username === '') {
+        alert("Please enter a username!");
+        return;
+    }
+    // Load coins from localStorage
+    coins = parseInt(localStorage.getItem(username)) || 0;
+    document.getElementById('userDisplay').innerText = username;
+    document.getElementById('balance').innerText = "Coins: " + coins;
+    document.getElementById('loginBox').style.display = "none";
+    document.getElementById('gameBox').style.display = "block";
+}
 
-# Command Handlers
-app.add_handler(CommandHandler("start", start))
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
-app.add_handler(CallbackQueryHandler(button))
+// =====================
+// Hamster Tap Function
+// =====================
+function tapHamster() {
+    coins += 1; // Increase coins per tap
+    document.getElementById('balance').innerText = "Coins: " + coins;
+    localStorage.setItem(username, coins);
 
-# ========================
-# Run Bot
-# ========================
-app.run_polling()
+    // Small animation
+    const hamster = document.getElementById('hamsterImg');
+    hamster.style.transform = "scale(1.1)";
+    setTimeout(() => { hamster.style.transform = "scale(1)"; }, 100);
+}
+
+// =====================
+// Support System
+// =====================
+function sendSupport() {
+    const msg = document.getElementById('supportMsg').value.trim();
+    if(msg === '') return;
+    const log = document.getElementById('supportLog');
+    const p = document.createElement('p');
+    p.innerText = username + ": " + msg;
+    log.appendChild(p);
+    log.scrollTop = log.scrollHeight;
+    document.getElementById('supportMsg').value = '';
+}
+</script>
+
+</body>
+</html>
