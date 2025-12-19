@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Tap Bot with Messages</title>
+<title>Hamster Tap Bot</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -13,11 +13,10 @@ body{
     color:#fff;
 }
 
-/* Pages */
-.page{ display:none; padding-bottom:80px; }
-.active{ display:block; }
+/* hidden */
+.hidden{display:none}
 
-/* Header */
+/* header */
 .header{
     padding:15px;
     display:flex;
@@ -25,17 +24,17 @@ body{
     align-items:center;
 }
 
+/* coin */
 .coin-box{
     display:flex;
+    gap:8px;
     align-items:center;
-    gap:10px;
 }
-
 .coin{
-    width:40px;
-    height:40px;
-    border-radius:50%;
+    width:35px;
+    height:35px;
     background:gold;
+    border-radius:50%;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -43,12 +42,14 @@ body{
     font-weight:bold;
 }
 
-/* Tap */
-.main{
+/* pages */
+.page{padding-bottom:80px}
+
+/* tap */
+.tap{
     text-align:center;
     margin-top:30px;
 }
-
 .tap-circle{
     width:220px;
     height:220px;
@@ -56,59 +57,24 @@ body{
     background:radial-gradient(circle,#2563eb,#020617);
     margin:auto;
     display:flex;
-    justify-content:center;
     align-items:center;
+    justify-content:center;
     box-shadow:0 0 40px rgba(37,99,235,.6);
-    cursor:pointer;
+}
+.tap-circle img{
+    width:150px;
+    border-radius:50%;
 }
 
-.tap-circle img{ width:140px; }
-
-/* Cards */
+/* cards */
 .card{
     background:#1f2937;
-    margin:15px;
+    margin:12px;
     padding:15px;
     border-radius:15px;
 }
 
-/* Dashboard */
-.stats{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-}
-
-.stat{
-    background:#111827;
-    padding:15px;
-    border-radius:12px;
-    text-align:center;
-}
-
-/* Messages */
-.message{
-    background:#111827;
-    padding:12px;
-    margin:10px 15px;
-    border-radius:12px;
-}
-
-.message small{
-    opacity:0.6;
-}
-
-/* Profile */
-.profile h2{ text-align:center; }
-
-.option{
-    background:#1f2937;
-    margin:10px;
-    padding:15px;
-    border-radius:12px;
-}
-
-/* Bottom Nav */
+/* nav */
 .nav{
     position:fixed;
     bottom:0;
@@ -120,129 +86,163 @@ body{
     padding:10px 0;
     border-top:1px solid #1f2937;
 }
+.nav div{opacity:.6}
+.nav .active{opacity:1;color:#38bdf8}
 
-.nav div{
-    cursor:pointer;
-    opacity:0.6;
-    font-size:14px;
+/* login */
+.login{
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
 }
-
-.nav .active-tab{
-    opacity:1;
-    color:#38bdf8;
+.login input{
+    padding:12px;
+    width:200px;
+    border:none;
+    border-radius:10px;
+}
+.login button{
+    margin-top:10px;
+    padding:12px 20px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:#fff;
 }
 </style>
 </head>
 
 <body>
 
+<!-- LOGIN -->
+<div id="login" class="login hidden">
+    <h2>Login</h2>
+    <input id="username" placeholder="Enter username">
+    <button onclick="login()">Login</button>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+
 <!-- HOME -->
-<div id="home" class="page active">
+<div id="home" class="page">
     <div class="header">
         <div class="coin-box">
             <div class="coin">$</div>
             <div id="coins">0</div>
         </div>
-        <div>Level 7</div>
+        <div>Level <span id="level">1</span></div>
     </div>
 
-    <div class="main">
+    <div class="tap">
         <p>Tap to Earn</p>
-        <div class="tap-circle" onclick="addCoin()">
-            <img src="https://i.imgur.com/4AiXzf8.png">
+        <div class="tap-circle" onclick="tap()">
+            <img src="bot.png">
         </div>
     </div>
 </div>
 
 <!-- DASHBOARD -->
-<div id="dashboard" class="page">
-    <h2 style="text-align:center;">📊 Dashboard</h2>
-
-    <div class="card stats">
-        <div class="stat">
-            <h3 id="dCoins">0</h3>
-            <p>Total Coins</p>
-        </div>
-        <div class="stat">
-            <h3>+1</h3>
-            <p>Tap Power</p>
-        </div>
-        <div class="stat">
-            <h3>7 / 10</h3>
-            <p>Level</p>
-        </div>
-        <div class="stat">
-            <h3>Legendary</h3>
-            <p>Status</p>
-        </div>
-    </div>
+<div id="dashboard" class="page hidden">
+    <div class="card">💰 Coins: <span id="dCoins"></span></div>
+    <div class="card">🏆 Level: <span id="dLevel"></span></div>
+    <div class="card">⭐ Status: Active</div>
 </div>
 
 <!-- MESSAGES -->
-<div id="messages" class="page">
-    <h2 style="text-align:center;">💬 Messages</h2>
-
-    <div class="message">
-        <b>System</b><br>
-        Welcome to Tap Bot 🎉  
-        <br><small>Today</small>
-    </div>
-
-    <div class="message">
-        <b>Reward Bot</b><br>
-        You received +100 bonus coins 💰  
-        <br><small>Yesterday</small>
-    </div>
-
-    <div class="message">
+<div id="messages" class="page hidden">
+    <div class="card">
         <b>Admin</b><br>
-        New update coming soon 🚀  
-        <br><small>2 days ago</small>
+        Welcome to Hamster Tap Bot 🐹  
     </div>
 </div>
 
 <!-- PROFILE -->
-<div id="profile" class="page profile">
-    <h2>👤 ChatGPT Bot</h2>
-    <p style="text-align:center;">Tap-to-Earn Player</p>
-
-    <div class="option">💰 Coins: <span id="pCoins">0</span></div>
-    <div class="option">🏆 Level: 7</div>
-    <div class="option">💬 Messages</div>
-    <div class="option">🛒 Shop</div>
-    <div class="option">⚙ Settings</div>
-    <div class="option">🚪 Logout</div>
+<div id="profile" class="page hidden">
+    <div class="card">👤 User: <span id="pUser"></span></div>
+    <div class="card">💰 Coins: <span id="pCoins"></span></div>
+    <div class="card">🏆 Level: <span id="pLevel"></span></div>
+    <div class="card" onclick="logout()">🚪 Logout</div>
 </div>
 
 <!-- NAV -->
 <div class="nav">
-    <div onclick="openPage('home',this)" class="active-tab">🏠 Home</div>
-    <div onclick="openPage('dashboard',this)">📊 Dashboard</div>
-    <div onclick="openPage('messages',this)">💬 Messages</div>
-    <div onclick="openPage('profile',this)">👤 Profile</div>
+    <div onclick="openPage('home',this)" class="active">🏠</div>
+    <div onclick="openPage('dashboard',this)">📊</div>
+    <div onclick="openPage('messages',this)">💬</div>
+    <div onclick="openPage('profile',this)">👤</div>
+</div>
+
 </div>
 
 <script>
-let coins = 0;
+let user = localStorage.getItem("user");
+let coins = Number(localStorage.getItem("coins")) || 0;
+let level = Number(localStorage.getItem("level")) || 1;
 
-function addCoin(){
+/* INIT */
+if(user){
+    document.getElementById("app").classList.remove("hidden");
+}else{
+    document.getElementById("login").classList.remove("hidden");
+}
+
+/* LOGIN */
+function login(){
+    user = document.getElementById("username").value;
+    if(!user) return;
+    localStorage.setItem("user",user);
+    localStorage.setItem("coins",0);
+    localStorage.setItem("level",1);
+    location.reload();
+}
+
+/* LOGOUT */
+function logout(){
+    localStorage.removeItem("user");
+    location.reload();
+}
+
+/* TAP */
+function tap(){
     coins++;
-    document.getElementById("coins").innerText = coins;
+    if(coins % 20 === 0) level++;
+    save();
+    update();
+}
+
+/* SAVE */
+function save(){
+    localStorage.setItem("coins",coins);
+    localStorage.setItem("level",level);
+}
+
+/* UPDATE UI */
+function update(){
+    coinsEl.innerText = coins;
+    levelEl.innerText = level;
+    dCoins.innerText = coins;
+    dLevel.innerText = level;
+    pCoins.innerText = coins;
+    pLevel.innerText = level;
+    pUser.innerText = user;
 }
 
 function openPage(id,el){
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-
-    document.querySelectorAll('.nav div').forEach(n=>n.classList.remove('active-tab'));
-    el.classList.add('active-tab');
-
-    document.getElementById("dCoins").innerText = coins;
-    document.getElementById("pCoins").innerText = coins;
+    document.querySelectorAll('.page').forEach(p=>p.classList.add("hidden"));
+    document.getElementById(id).classList.remove("hidden");
+    document.querySelectorAll('.nav div').forEach(n=>n.classList.remove("active"));
+    el.classList.add("active");
+    update();
 }
+
+update();
 </script>
 
 </body>
-</html>/tap-bot
+</html>tap-bot/
  ├─ index.html
- └─ bot.png
+ └─ bot.png   (আপনার hamster ছবি<img width="1024" height="1024" alt="1000012000" src="https://github.com/user-attachments/assets/4ba7ba04-6032-493e-aca9-ce381a67f7bd" />
+
