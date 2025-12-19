@@ -1,9 +1,97 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Test Page</title>
+  <meta charset="UTF-8">
+  <title>Cricket Live</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+    }
+    header {
+      background: #0a8f6a;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 22px;
+    }
+    .container {
+      padding: 15px;
+    }
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+    }
+    .match-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .score {
+      margin-top: 8px;
+      font-size: 16px;
+      color: #333;
+    }
+    button {
+      background: #0a8f6a;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #066d51;
+    }
+    footer {
+      text-align: center;
+      padding: 10px;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>GitHub Pages Working</h1>
+
+  <header>🏏 Cricket Live</header>
+
+  <div class="container">
+
+    <div class="card">
+      <div class="match-title">Bangladesh vs India</div>
+      <div class="score" id="score">Loading score...</div>
+      <br>
+      <button onclick="updateScore()">Refresh Score</button>
+    </div>
+
+  </div>
+
+  <footer>
+    © 2025 Cricket Live | Powered by GitHub Pages
+  </footer>
+
+  <script>
+    function updateScore() {
+      const scores = [
+        "Bangladesh 145/4 (18.2)",
+        "Bangladesh 150/4 (19.1)",
+        "Bangladesh 156/5 (20.0)",
+        "Bangladesh won by 12 runs"
+      ];
+
+      const random = Math.floor(Math.random() * scores.length);
+      document.getElementById("score").innerText = scores[random];
+    }
+
+    updateScore();
+  </script>
+
 </body>
-</html>
+    </html>
