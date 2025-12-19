@@ -368,3 +368,580 @@ setInterval(loadLive, 20000);
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Game (6,4,W only)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f9f9f9;
+            padding: 50px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        p {
+            font-size: 18px;
+            color: #333;
+        }
+        #scoreboard {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cricket Game (6, 4, W)</h1>
+    <p>Click "Hit Ball" to play!</p>
+    <button onclick="hitBall()">Hit Ball</button>
+    <button onclick="resetGame()">Reset Game</button>
+
+    <div id="scoreboard">
+        Runs: 0 | Balls: 0 | Wickets: 0
+    </div>
+
+    <script>
+        let runs = 0;
+        let balls = 0;
+        let wickets = 0;
+        const maxBalls = 6;
+        const maxWickets = 3;
+
+        function hitBall() {
+            if (balls >= maxBalls || wickets >= maxWickets) {
+                alert("Game Over! Please reset.");
+                return;
+            }
+
+            balls++;
+
+            // Only 6, 4, or wicket (W) possible
+            const outcomes = [4, 6, "W"];
+            const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+
+            if (outcome === "W") {
+                wickets++;
+                alert("Oh no! Wicket!");
+            } else {
+                runs += outcome;
+                alert(`You scored ${outcome} run(s)!`);
+            }
+
+            updateScoreboard();
+
+            if (balls === maxBalls || wickets === maxWickets) {
+                alert(`Game Over! Total Runs: ${runs}`);
+            }
+        }
+
+        function updateScoreboard() {
+            document.getElementById("scoreboard").innerHTML = `Runs: ${runs} | Balls: ${balls} | Wickets: ${wickets}`;
+        }
+
+        function resetGame() {
+            runs = 0;
+            balls = 0;
+            wickets = 0;
+            updateScoreboard();
+            alert("Game reset! Start again.");
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Game (1, 4, 6, W)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+            padding: 50px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        #scoreboard {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cricket Game (1, 4, 6, W)</h1>
+    <p>Click "Hit Ball" to play!</p>
+    <button onclick="hitBall()">Hit Ball</button>
+    <button onclick="resetGame()">Reset Game</button>
+
+    <div id="scoreboard">
+        Runs: 0 | Balls: 0 | Wickets: 0
+    </div>
+
+    <script>
+        let runs = 0;
+        let balls = 0;
+        let wickets = 0;
+        const maxBalls = 6;
+        const maxWickets = 3;
+
+        function hitBall() {
+            if (balls >= maxBalls || wickets >= maxWickets) {
+                alert("Game Over! Please reset.");
+                return;
+            }
+
+            balls++;
+
+            // Possible outcomes: 1, 4, 6, W
+            const outcomes = [1, 4, 6, "W"];
+            const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+
+            if (outcome === "W") {
+                wickets++;
+                alert("Oh no! Wicket!");
+            } else {
+                runs += outcome;
+                alert(`You scored ${outcome} run(s)!`);
+            }
+
+            updateScoreboard();
+
+            if (balls === maxBalls || wickets === maxWickets) {
+                alert(`Game Over! Total Runs: ${runs}`);
+            }
+        }
+
+        function updateScoreboard() {
+            document.getElementById("scoreboard").innerHTML = `Runs: ${runs} | Balls: ${balls} | Wickets: ${wickets}`;
+        }
+
+        function resetGame() {
+            runs = 0;
+            balls = 0;
+            wickets = 0;
+            updateScoreboard();
+            alert("Game reset! Start again.");
+        }
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fun Cricket Game</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #e0f7fa;
+        padding: 50px;
+    }
+    h1 {
+        color: #006064;
+    }
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        margin: 10px;
+        cursor: pointer;
+    }
+    #scoreboard {
+        margin-top: 20px;
+        font-size: 22px;
+        font-weight: bold;
+    }
+    #outcome {
+        margin-top: 20px;
+        font-size: 24px;
+        color: #d84315;
+        font-weight: bold;
+        height: 30px;
+    }
+</style>
+</head>
+<body>
+
+<h1>Cricket Game (1, 4, 6, W)</h1>
+<p>Click "Hit Ball" to play!</p>
+<button onclick="hitBall()">Hit Ball</button>
+<button onclick="resetGame()">Reset Game</button>
+
+<div id="scoreboard">Runs: 0 | Balls: 0 | Wickets: 0</div>
+<div id="outcome"></div>
+
+<script>
+let runs = 0;
+let balls = 0;
+let wickets = 0;
+const maxBalls = 6;
+const maxWickets = 3;
+
+function hitBall() {
+    if (balls >= maxBalls || wickets >= maxWickets) {
+        alert("Game Over! Please reset.");
+        return;
+    }
+
+    balls++;
+
+    const outcomes = [1, 4, 6, "W"];
+    const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+
+    if (outcome === "W") {
+        wickets++;
+        showOutcome("WICKET! 😢");
+    } else if (outcome === 4) {
+        runs += outcome;
+        showOutcome("FOUR! 🏏");
+    } else if (outcome === 6) {
+        runs += outcome;
+        showOutcome("SIX! 🎉");
+    } else {
+        runs += outcome;
+        showOutcome("You scored 1 run!");
+    }
+
+    updateScoreboard();
+
+    if (balls === maxBalls || wickets === maxWickets) {
+        setTimeout(() => alert(`Game Over! Total Runs: ${runs}`), 100);
+    }
+}
+
+function showOutcome(text) {
+    const div = document.getElementById("outcome");
+    div.textContent = text;
+    div.style.color = (text.includes("WICKET")) ? "#b71c1c" : "#1b5e20";
+    // small animation effect
+    div.style.transform = "scale(1.5)";
+    setTimeout(() => { div.style.transform = "scale(1)"; }, 300);
+}
+
+function updateScoreboard() {
+    document.getElementById("scoreboard").innerHTML = `Runs: ${runs} | Balls: ${balls} | Wickets: ${wickets}`;
+}
+
+function resetGame() {
+    runs = 0;
+    balls = 0;
+    wickets = 0;
+    updateScoreboard();
+    document.getElementById("outcome").textContent = "";
+    alert("Game reset! Start again.");
+}
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fun Cricket Game</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: linear-gradient(to bottom, #80deea, #e0f7fa);
+    padding: 50px;
+  }
+  h1 {
+    color: #006064;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    background-color: #00796b;
+    color: white;
+    transition: 0.3s;
+  }
+  button:hover {
+    background-color: #004d40;
+  }
+  #scoreboard {
+    margin-top: 20px;
+    font-size: 22px;
+    font-weight: bold;
+  }
+  #outcome {
+    margin-top: 20px;
+    font-size: 24px;
+    height: 30px;
+    font-weight: bold;
+  }
+  #ball {
+    margin: 30px auto;
+    width: 30px;
+    height: 30px;
+    background-color: red;
+    border-radius: 50%;
+    position: relative;
+    animation: none;
+  }
+  @keyframes throwBall {
+    0% {top: 0;}
+    50% {top: -100px;}
+    100% {top: 0;}
+  }
+</style>
+</head>
+<body>
+
+<h1>Cricket Game (1, 4, 6, W)</h1>
+<p>Click "Hit Ball" to play!</p>
+<button onclick="hitBall()">Hit Ball</button>
+<button onclick="resetGame()">Reset Game</button>
+
+<div id="scoreboard">Runs: 0 | Balls: 0 | Wickets: 0</div>
+<div id="outcome"></div>
+<div id="ball"></div>
+
+<script>
+let runs = 0;
+let balls = 0;
+let wickets = 0;
+const maxBalls = 6;
+const maxWickets = 3;
+
+function hitBall() {
+  if (balls >= maxBalls || wickets >= maxWickets) {
+    alert("Game Over! Please reset.");
+    return;
+  }
+
+  balls++;
+
+  const outcomes = [1, 4, 6, "W"];
+  const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+
+  const ballDiv = document.getElementById("ball");
+  ballDiv.style.animation = "throwBall 0.5s ease";
+  setTimeout(() => { ballDiv.style.animation = "none"; }, 500);
+
+  if (outcome === "W") {
+    wickets++;
+    showOutcome("WICKET! 😢", "#b71c1c");
+  } else if (outcome === 4) {
+    runs += outcome;
+    showOutcome("FOUR! 🏏", "#1b5e20");
+  } else if (outcome === 6) {
+    runs += outcome;
+    showOutcome("SIX! 🎉", "#1b5e20");
+  } else {
+    runs += outcome;
+    showOutcome("You scored 1 run!", "#1b5e20");
+  }
+
+  updateScoreboard();
+
+  if (balls === maxBalls || wickets === maxWickets) {
+    setTimeout(() => alert(`Game Over! Total Runs: ${runs}`), 100);
+  }
+}
+
+function showOutcome(text, color) {
+  const div = document.getElementById("outcome");
+  div.textContent = text;
+  div.style.color = color;
+  div.style.transform = "scale(1.5)";
+  setTimeout(() => { div.style.transform = "scale(1)"; }, 300);
+}
+
+function updateScoreboard() {
+  document.getElementById("scoreboard").innerHTML = `Runs: ${runs} | Balls: ${balls} | Wickets: ${wickets}`;
+}
+
+function resetGame() {
+  runs = 0;
+  balls = 0;
+  wickets = 0;
+  updateScoreboard();
+  document.getElementById("outcome").textContent = "";
+  alert("Game reset! Start again.");
+}
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Cricket Game</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: linear-gradient(to bottom, #80deea, #e0f7fa);
+    padding: 50px;
+  }
+  h1 {
+    color: #006064;
+  }
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    background-color: #00796b;
+    color: white;
+    transition: 0.3s;
+  }
+  button:hover {
+    background-color: #004d40;
+  }
+  #scoreboard {
+    margin-top: 20px;
+    font-size: 22px;
+    font-weight: bold;
+  }
+  #outcome {
+    margin-top: 20px;
+    font-size: 24px;
+    height: 30px;
+    font-weight: bold;
+  }
+  #gameArea {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    margin: 30px auto;
+    background-color: #a5d6a7;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  #ball {
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 0;
+    left: 140px;
+    transition: all 0.5s ease;
+  }
+  #bat {
+    width: 60px;
+    height: 10px;
+    background-color: brown;
+    position: absolute;
+    bottom: 0;
+    left: 120px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Interactive Cricket Game</h1>
+<p>Click "Hit Ball" to play!</p>
+<button onclick="hitBall()">Hit Ball</button>
+<button onclick="resetGame()">Reset Game</button>
+
+<div id="scoreboard">Runs: 0 | Balls: 0 | Wickets: 0</div>
+<div id="outcome"></div>
+
+<div id="gameArea">
+  <div id="ball"></div>
+  <div id="bat"></div>
+</div>
+
+<script>
+let runs = 0;
+let balls = 0;
+let wickets = 0;
+const maxBalls = 6;
+const maxWickets = 3;
+
+function hitBall() {
+  if (balls >= maxBalls || wickets >= maxWickets) {
+    alert("Game Over! Please reset.");
+    return;
+  }
+
+  balls++;
+
+  const outcomes = [1, 4, 6, "W"];
+  const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+
+  const ballDiv = document.getElementById("ball");
+  
+  // Ball animation
+  const hitPosition = Math.floor(Math.random() * 220); // move ball left-right randomly
+  ballDiv.style.left = hitPosition + "px";
+  ballDiv.style.bottom = "150px";
+  setTimeout(() => { ballDiv.style.bottom = "0px"; }, 300);
+
+  if (outcome === "W") {
+    wickets++;
+    showOutcome("WICKET! 😢", "#b71c1c");
+  } else if (outcome === 4) {
+    runs += outcome;
+    showOutcome("FOUR! 🏏", "#1b5e20");
+  } else if (outcome === 6) {
+    runs += outcome;
+    showOutcome("SIX! 🎉", "#1b5e20");
+  } else {
+    runs += outcome;
+    showOutcome("You scored 1 run!", "#1b5e20");
+  }
+
+  updateScoreboard();
+
+  if (balls === maxBalls || wickets === maxWickets) {
+    setTimeout(() => alert(`Game Over! Total Runs: ${runs}`), 500);
+  }
+}
+
+function showOutcome(text, color) {
+  const div = document.getElementById("outcome");
+  div.textContent = text;
+  div.style.color = color;
+  div.style.transform = "scale(1.5)";
+  setTimeout(() => { div.style.transform = "scale(1)"; }, 300);
+}
+
+function updateScoreboard() {
+  document.getElementById("scoreboard").innerHTML = `Runs: ${runs} | Balls: ${balls} | Wickets: ${wickets}`;
+}
+
+function resetGame() {
+  runs = 0;
+  balls = 0;
+  wickets = 0;
+  updateScoreboard();
+  document.getElementById("outcome").textContent = "";
+  document.getElementById("ball").style.left = "140px";
+  document.getElementById("ball").style.bottom = "0px";
+  alert("Game reset! Start again.");
+}
+</script>
+
+</body>
+</html>
