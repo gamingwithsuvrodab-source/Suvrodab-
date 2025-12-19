@@ -1,97 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Cricket Live</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Cricket Live</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      margin: 0;
-    }
-    header {
-      background: #0a8f6a;
-      color: white;
-      padding: 15px;
-      text-align: center;
-      font-size: 22px;
-    }
-    .container {
-      padding: 15px;
-    }
-    .card {
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      margin-bottom: 15px;
-    }
-    .match-title {
-      font-size: 18px;
-      font-weight: bold;
-    }
-    .score {
-      margin-top: 8px;
-      font-size: 16px;
-      color: #333;
-    }
-    button {
-      background: #0a8f6a;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #066d51;
-    }
-    footer {
-      text-align: center;
-      padding: 10px;
-      color: #666;
-      font-size: 14px;
-    }
-  </style>
+<style>
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+}
+header {
+    background: #0a8f6a;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+}
+.container {
+    padding: 15px;
+}
+.card {
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    margin-bottom: 15px;
+}
+.match-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+.live {
+    color: red;
+    font-size: 14px;
+}
+.score {
+    font-size: 16px;
+    margin-top: 5px;
+}
+.status {
+    font-size: 14px;
+    color: #555;
+    margin-top: 5px;
+}
+footer {
+    text-align: center;
+    padding: 10px;
+    font-size: 13px;
+    color: #666;
+}
+.loading {
+    text-align: center;
+    font-size: 16px;
+}
+</style>
 </head>
 
 <body>
 
-  <header>🏏 Cricket Live</header>
+<header>🏏 Live Cricket Score</header>
 
-  <div class="container">
+<div class="container" id="matches">
+    <div class="loading">Loading live matches...</div>
+</div>
 
-    <div class="card">
-      <div class="match-title">Bangladesh vs India</div>
-      <div class="score" id="score">Loading score...</div>
-      <br>
-      <button onclick="updateScore()">Refresh Score</button>
-    </div>
-
-  </div>
-
-  <footer>
+<footer>
     © 2025 Cricket Live | Powered by GitHub Pages
-  </footer>
+</footer>
 
-  <script>
-    function updateScore() {
-      const scores = [
-        "Bangladesh 145/4 (18.2)",
-        "Bangladesh 150/4 (19.1)",
-        "Bangladesh 156/5 (20.0)",
-        "Bangladesh won by 12 runs"
-      ];
+<script>
+const API_KEY = "YOUR_API_KEY_HERE";
+const API_URL = `https://api.cricapi.com/v1/currentMatches?apikey=${API_KEY}&offset=0`;
 
-      const random = Math.floor(Math.random() * scores.length);
-      document.getElementById("score").innerText = scores[random];
+async function loadMatches() {
+    const container = document.getElementById("matches");
+    container.innerHTML = "<div class='loading'>Loading live matches...</div>";
+
+    try {
+        const response = await fetch(API_URL);
+        const result = await response.json();
+
+        if (!result.data || result.data.length === 0) {
+            container.innerHTML = "<div class='loading'>No live match now</div>";
+            return;
+        }
+
+        container.innerHTML = "";
+
+        result.data.forEach(match => {
+            if (!match.score || match.score.length === 0) return;
+
+            let scoreHTML = "";
+            match.score.forEach(s => {
+                scoreHTML += `<div class="score">${s.inning}: ${s.r}/${s.w} (${s.o} ov)</div>`;
+            });
+
+            const card = `
+                <div class="card">
+                    <div class="match-title">
+                        ${match.name} <span class="live">LIVE</span>
+                    </div>
+                    ${scoreHTML}
+                    <div class="status">${match.status || ""}</div>
+                </div>
+            `;
+
+            container.innerHTML += card;
+        });
+
+    } catch (e) {
+        container.innerHTML = "<div class='loading'>Error loading live score</div>";
     }
+}
 
-    updateScore();
-  </script>
+// First load
+loadMatches();
+
+// Auto refresh every 20 seconds
+setInterval(loadMatches, 20000);
+</script>
 
 </body>
-    </html>
+</html>
