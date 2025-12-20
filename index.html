@@ -2,946 +2,371 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Cricket Live</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<title>Login & Registration UI</title>
 <style>
-* {
+*{
     box-sizing: border-box;
-}
-body {
-    margin: 0;
     font-family: Arial, sans-serif;
-    background: #f2f2f2;
 }
-header {
-    background: #0a8f6a;
-    color: #fff;
-    padding: 15px;
-    text-align: center;
-    font-size: 22px;
-    font-weight: bold;
+body{
+    background: #eef1f7;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.container {
-    padding: 15px;
-}
-.card {
+
+.container{
+    width: 800px;
+    height: 450px;
     background: #fff;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+/* form box */
+.form-box{
+    position: absolute;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    transition: 0.6s ease-in-out;
+    z-index: 2;
+}
+
+.form-box form{
+    width: 100%;
+    text-align: center;
+}
+
+.form-box h2{
+    margin-bottom: 20px;
+}
+
+.form-box input{
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.form-box button{
+    width: 100%;
+    padding: 12px;
+    background: #6c8cff;
+    border: none;
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.social{
+    margin-top: 15px;
+}
+.social span{
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin: 5px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+/* info box */
+.info-box{
+    position: absolute;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: #6c8cff;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+    transition: 0.6s ease-in-out;
+}
+
+.info-box h2{
     margin-bottom: 15px;
 }
-.match-title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 8px;
+
+.info-box button{
+    background: transparent;
+    border: 2px solid #fff;
+    padding: 10px 25px;
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
 }
-.live {
-    color: red;
-    font-size: 14px;
+
+/* active state */
+.container.active .form-box{
+    right: 50%;
 }
-.score {
-    font-size: 16px;
-    margin-top: 5px;
-}
-.status {
-    font-size: 14px;
-    color: #555;
-    margin-top: 5px;
-}
-footer {
-    text-align: center;
-    padding: 10px;
-    font-size: 13px;
-    color: #666;
-}
-.loading {
-    text-align: center;
-    font-size: 16px;
+.container.active .info-box{
+    left: 50%;
 }
 </style>
 </head>
-
 <body>
 
-<header>🏏 Live Cricket Score</header>
+<div class="container" id="container">
 
-<div class="container" id="matches">
-    <div class="loading">Loading live matches...</div>
+    <!-- Registration -->
+    <div class="form-box">
+        <form>
+            <h2>Registration</h2>
+            <input type="text" placeholder="Username">
+            <input type="email" placeholder="Email">
+            <input type="password" placeholder="Password">
+            <button>Register</button>
+
+            <div class="social">
+                <span>G</span>
+                <span>f</span>
+                <span>in</span>
+            </div>
+        </form>
+    </div>
+
+    <!-- Info -->
+    <div class="info-box">
+        <div>
+            <h2>Welcome Back!</h2>
+            <p>Already have an account?</p>
+            <button onclick="toggle()">Login</button>
+        </div>
+    </div>
+
 </div>
 
-<footer>
-    © 2025 Cricket Live | Powered by GitHub Pages
-</footer>
-
 <script>
-const API_KEY = "YOUR_API_KEY_HERE";
-const API_URL = `https://api.cricapi.com/v1/currentMatches?apikey=${API_KEY}&offset=0`;
-
-async function loadMatches() {
-    const container = document.getElementById("matches");
-    container.innerHTML = "<div class='loading'>Loading live matches...</div>";
-
-    try {
-        const response = await fetch(API_URL);
-        const result = await response.json();
-
-        if (!result.data || result.data.length === 0) {
-            container.innerHTML = "<div class='loading'>No live match now</div>";
-            return;
-        }
-
-        container.innerHTML = "";
-
-        result.data.forEach(match => {
-            if (!match.score || match.score.length === 0) return;
-
-            let scoreHTML = "";
-            match.score.forEach(s => {
-                scoreHTML += `<div class="score">${s.inning}: ${s.r}/${s.w} (${s.o} ov)</div>`;
-            });
-
-            const card = `
-                <div class="card">
-                    <div class="match-title">
-                        ${match.name} <span class="live">LIVE</span>
-                    </div>
-                    ${scoreHTML}
-                    <div class="status">${match.status || ""}</div>
-                </div>
-            `;
-
-            container.innerHTML += card;
-        });
-
-    } catch (e) {
-        container.innerHTML = "<div class='loading'>Error loading live score</div>";
-    }
+function toggle(){
+    document.getElementById("container").classList.toggle("active");
 }
+</script>
 
-// First load
-loadMatches();
-
-// Auto refresh every 20 seconds
-setInterval(loadMatches, 20000);<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>LIVE CRICKET</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-*{box-sizing:border-box}
-
+</body>
+    </html>function toggle(){
+ document.getElementById("container").classList.toggle("active");
+}*{box-sizing:border-box;font-family:Arial}
 body{
-    margin:0;
-    font-family: Arial Black, Arial, sans-serif;
-    background:#dcdcdc;
+background:#eef1f7;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
 }
 
-/* HEADER */
-header{
-    background:#004d40;
-    color:#ffffff;
-    text-align:center;
-    padding:50px 10px;
-    font-size:70px;
-    font-weight:900;
-    letter-spacing:4px;
-}
-
-/* CONTAINER */
 .container{
-    padding:40px;
+width:800px;
+height:450px;
+background:#fff;
+border-radius:15px;
+position:relative;
+overflow:hidden;
+box-shadow:0 15px 40px rgba(0,0,0,.2);
 }
 
-/* CARD */
-.card{
-    background:white;
-    border-radius:30px;
-    padding:45px;
-    margin-bottom:40px;
-    box-shadow:0 10px 25px rgba(0,0,0,.4);
+.form-box{
+width:50%;
+padding:40px;
+position:absolute;
+right:0;
+transition:.6s;
 }
 
-/* MATCH NAME */
-.match-title{
-    font-size:60px;
-    font-weight:900;
-    margin-bottom:25px;
+.form-box form{
+margin-bottom:40px;
 }
 
-/* LIVE BADGE */
-.live{
-    background:red;
-    color:white;
-    padding:10px 25px;
-    border-radius:15px;
-    font-size:40px;
-    margin-left:20px;
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:8px;
+border:1px solid #ccc;
 }
 
-/* SCORE */
-.score{
-    font-size:58px;
-    font-weight:900;
-    margin-top:20px;
+button{
+width:100%;
+padding:12px;
+background:#6c8cff;
+border:none;
+color:#fff;
+border-radius:8px;
+cursor:pointer;
 }
 
-/* STATUS */
-.status{
-    font-size:44px;
-    margin-top:30px;
-    color:#222;
-    font-weight:700;
+.info-box{
+width:50%;
+height:100%;
+background:#6c8cff;
+color:#fff;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+position:absolute;
+left:0;
+transition:.6s;
 }
 
-/* LOADING */
-.loading{
-    text-align:center;
-    font-size:60px;
-    font-weight:900;
+.container.active .form-box{right:50%;}
+.container.active .info-box{left:50%;}
+
+@media(max-width:768px){
+.container{width:95%;height:auto}
+.form-box,.info-box{
+position:relative;
+width:100%;
+}
+}<?php
+$conn = mysqli_connect("localhost","root","","login_system");
+session_start();
+if(!$conn){
+    die("Database connection failed");
+}
+?>CREATE DATABASE login_system;
+USE login_system;
+
+CREATE TABLE users(
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(100),
+  email VARCHAR(100),
+  password VARCHAR(255)
+);login-system/
+│
+├── index.html
+├── style.css
+├── script.js
+│
+├── config.php
+├── register.php
+├── login.php
+├── dashboard.php
+├── logout.php
+│
+└── database.sql<?php
+include 'config.php';
+if(!isset($_SESSION['user'])){
+ header("Location:index.html");
+}
+?>
+<h1>Welcome <?=$_SESSION['user']?></h1>
+<a href="logout.php">Logout</a><?php
+include 'config.php';
+
+$email=$_POST['email'];
+$password=$_POST['password'];
+
+$result=mysqli_query($conn,"SELECT * FROM users WHERE email='$email'");
+$user=mysqli_fetch_assoc($result);
+
+if($user && password_verify($password,$user['password'])){
+ $_SESSION['user']=$user['username'];
+ header("Location:dashboard.php");
+}else{
+ echo "Login Failed";
+}
+?><?php
+include 'config.php';
+
+$username=$_POST['username'];
+$email=$_POST['email'];
+$password=password_hash($_POST['password'],PASSWORD_DEFAULT);
+
+$sql="INSERT INTO users(username,email,password)
+VALUES('$username','$email','$password')";
+mysqli_query($conn,$sql);
+
+header("Location:index.html");
+?>function toggle(){
+ document.getElementById("container").classList.toggle("active");
+}*{box-sizing:border-box;font-family:Arial}
+body{
+background:#eef1f7;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
 }
 
-/* FOOTER */
-footer{
-    text-align:center;
-    font-size:36px;
-    padding:30px;
-    color:#333;
-}
-</style>
-</head>
-
-<body>
-
-<header>🏏 LIVE CRICKET SCORE</header>
-
-<div class="container" id="matches">
-    <div class="loading">LOADING LIVE MATCH…</div>
-</div>
-
-<footer>
-    © 2025 LIVE CRICKET DISPLAY
-</footer>
-
-<script>
-const API_KEY = "PASTE_YOUR_CRICAPI_KEY_HERE";
-const API_URL = `https://api.cricapi.com/v1/currentMatches?apikey=${API_KEY}&offset=0`;
-
-async function loadLive(){
-    const box = document.getElementById("matches");
-    box.innerHTML = "<div class='loading'>LOADING LIVE MATCH…</div>";
-
-    try{
-        const res = await fetch(API_URL);
-        const data = await res.json();
-
-        if(!data.data || data.data.length === 0){
-            box.innerHTML = "<div class='loading'>NO LIVE MATCH NOW</div>";
-            return;
-        }
-
-        box.innerHTML = "";
-
-        data.data.forEach(match=>{
-            if(!match.score || match.score.length === 0) return;
-
-            let scoreHTML = "";
-            match.score.forEach(s=>{
-                scoreHTML += `
-                <div class="score">
-                    ${s.inning}: ${s.r}/${s.w} (${s.o} OV)
-                </div>`;
-            });
-
-            box.innerHTML += `
-            <div class="card">
-                <div class="match-title">
-                    ${match.name}
-                    <span class="live">LIVE</span>
-                </div>
-                ${scoreHTML}
-                <div class="status">${match.status || ""}</div>
-            </div>`;
-        });
-
-    }catch(e){
-        box.innerHTML = "<div class='loading'>ERROR LOADING SCORE</div>";
-    }
+.container{
+width:800px;
+height:450px;
+background:#fff;
+border-radius:15px;
+position:relative;
+overflow:hidden;
+box-shadow:0 15px 40px rgba(0,0,0,.2);
 }
 
-loadLive();
-setInterval(loadLive, 20000);
-</script>
-
-</body>
-</html>
-</script>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cricket Game</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #dff0d8;
-            padding: 50px;
-        }
-        h1 {
-            color: #2c3e50;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 10px;
-            cursor: pointer;
-        }
-        p {
-            font-size: 18px;
-            color: #333;
-        }
-        #scoreboard {
-            margin-top: 20px;
-            font-size: 20px;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-    <h1>Simple Cricket Game</h1>
-    <p>Click "Hit Ball" to play!</p>
-    <button onclick="hitBall()">Hit Ball</button>
-    <button onclick="resetGame()">Reset Game</button>
-
-    <div id="scoreboard">
-        Runs: 0 | Balls: 0 | Wickets: 0
-    </div>
-
-    <script>
-        let runs = 0;
-        let balls = 0;
-        let wickets = 0;
-        const maxWickets = 3;
-        const maxBalls = 6;
-
-        function hitBall() {
-            if (balls >= maxBalls || wickets >= maxWickets) {
-                alert("Game Over! Please reset.");
-                return;
-            }
-
-            balls++;
-            const outcome = Math.floor(Math.random() * 7); // 0-6
-            if (outcome === 0) {
-                wickets++;
-                alert("Oh no! You lost a wicket.");
-            } else {
-                runs += outcome;
-                alert(`You scored ${outcome} run(s)!`);
-            }
-            updateScoreboard();
-
-            if (balls === maxBalls || wickets === maxWickets) {
-                alert(`Game Over! Total Runs: ${runs}`);
-            }
-        }
-
-        function updateScoreboard() {
-            document.getElementById("scoreboard").innerHTML = `Runs: ${runs} | Balls: ${balls} | Wickets: ${wickets}`;
-        }
-
-        function resetGame() {
-            runs = 0;
-            balls = 0;
-            wickets = 0;
-            updateScoreboard();
-            alert("Game reset! Start again.");
-        }
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cricket Game (6,4,W only)</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f9f9f9;
-            padding: 50px;
-        }
-        h1 {
-            color: #2c3e50;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 10px;
-            cursor: pointer;
-        }
-        p {
-            font-size: 18px;
-            color: #333;
-        }
-        #scoreboard {
-            margin-top: 20px;
-            font-size: 20px;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-    <h1>Cricket Game (6, 4, W)</h1>
-    <p>Click "Hit Ball" to play!</p>
-    <button onclick="hitBall()">Hit Ball</button>
-    <button onclick="resetGame()">Reset Game</button>
-
-    <div id="scoreboard">
-        Runs: 0 | Balls: 0 | Wickets: 0
-    </div>
-
-    <script>
-        let runs = 0;
-        let balls = 0;
-        let wickets = 0;
-        const maxBalls = 6;
-        const maxWickets = 3;
-
-        function hitBall() {
-            if (balls >= maxBalls || wickets >= maxWickets) {
-                alert("Game Over! Please reset.");
-                return;
-            }
-
-            balls++;
-
-            // Only 6, 4, or wicket (W) possible
-            const outcomes = [4, 6, "W"];
-            const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
-
-            if (outcome === "W") {
-                wickets++;
-                alert("Oh no! Wicket!");
-            } else {
-                runs += outcome;
-                alert(`You scored ${outcome} run(s)!`);
-            }
-
-            updateScoreboard();
-
-            if (balls === maxBalls || wickets === maxWickets) {
-                alert(`Game Over! Total Runs: ${runs}`);
-            }
-        }
-
-        function updateScoreboard() {
-            document.getElementById("scoreboard").innerHTML = `Runs: ${runs} | Balls: ${balls} | Wickets: ${wickets}`;
-        }
-
-        function resetGame() {
-            runs = 0;
-            balls = 0;
-            wickets = 0;
-            updateScoreboard();
-            alert("Game reset! Start again.");
-        }
-    </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cricket Game (1, 4, 6, W)</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f0f8ff;
-            padding: 50px;
-        }
-        h1 {
-            color: #2c3e50;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 10px;
-            cursor: pointer;
-        }
-        #scoreboard {
-            margin-top: 20px;
-            font-size: 20px;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-    <h1>Cricket Game (1, 4, 6, W)</h1>
-    <p>Click "Hit Ball" to play!</p>
-    <button onclick="hitBall()">Hit Ball</button>
-    <button onclick="resetGame()">Reset Game</button>
-
-    <div id="scoreboard">
-        Runs: 0 | Balls: 0 | Wickets: 0
-    </div>
-
-    <script>
-        let runs = 0;
-        let balls = 0;
-        let wickets = 0;
-        const maxBalls = 6;
-        const maxWickets = 3;
-
-        function hitBall() {
-            if (balls >= maxBalls || wickets >= maxWickets) {
-                alert("Game Over! Please reset.");
-                return;
-            }
-
-            balls++;
-
-            // Possible outcomes: 1, 4, 6, W
-            const outcomes = [1, 4, 6, "W"];
-            const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
-
-            if (outcome === "W") {
-                wickets++;
-                alert("Oh no! Wicket!");
-            } else {
-                runs += outcome;
-                alert(`You scored ${outcome} run(s)!`);
-            }
-
-            updateScoreboard();
-
-            if (balls === maxBalls || wickets === maxWickets) {
-                alert(`Game Over! Total Runs: ${runs}`);
-            }
-        }
-
-        function updateScoreboard() {
-            document.getElementById("scoreboard").innerHTML = `Runs: ${runs} | Balls: ${balls} | Wickets: ${wickets}`;
-        }
-
-        function resetGame() {
-            runs = 0;
-            balls = 0;
-            wickets = 0;
-            updateScoreboard();
-            alert("Game reset! Start again.");
-        }
-    </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fun Cricket Game</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        background-color: #e0f7fa;
-        padding: 50px;
-    }
-    h1 {
-        color: #006064;
-    }
-    button {
-        padding: 10px 20px;
-        font-size: 16px;
-        margin: 10px;
-        cursor: pointer;
-    }
-    #scoreboard {
-        margin-top: 20px;
-        font-size: 22px;
-        font-weight: bold;
-    }
-    #outcome {
-        margin-top: 20px;
-        font-size: 24px;
-        color: #d84315;
-        font-weight: bold;
-        height: 30px;
-    }
-</style>
-</head>
-<body>
-
-<h1>Cricket Game (1, 4, 6, W)</h1>
-<p>Click "Hit Ball" to play!</p>
-<button onclick="hitBall()">Hit Ball</button>
-<button onclick="resetGame()">Reset Game</button>
-
-<div id="scoreboard">Runs: 0 | Balls: 0 | Wickets: 0</div>
-<div id="outcome"></div>
-
-<script>
-let runs = 0;
-let balls = 0;
-let wickets = 0;
-const maxBalls = 6;
-const maxWickets = 3;
-
-function hitBall() {
-    if (balls >= maxBalls || wickets >= maxWickets) {
-        alert("Game Over! Please reset.");
-        return;
-    }
-
-    balls++;
-
-    const outcomes = [1, 4, 6, "W"];
-    const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
-
-    if (outcome === "W") {
-        wickets++;
-        showOutcome("WICKET! 😢");
-    } else if (outcome === 4) {
-        runs += outcome;
-        showOutcome("FOUR! 🏏");
-    } else if (outcome === 6) {
-        runs += outcome;
-        showOutcome("SIX! 🎉");
-    } else {
-        runs += outcome;
-        showOutcome("You scored 1 run!");
-    }
-
-    updateScoreboard();
-
-    if (balls === maxBalls || wickets === maxWickets) {
-        setTimeout(() => alert(`Game Over! Total Runs: ${runs}`), 100);
-    }
+.form-box{
+width:50%;
+padding:40px;
+position:absolute;
+right:0;
+transition:.6s;
 }
 
-function showOutcome(text) {
-    const div = document.getElementById("outcome");
-    div.textContent = text;
-    div.style.color = (text.includes("WICKET")) ? "#b71c1c" : "#1b5e20";
-    // small animation effect
-    div.style.transform = "scale(1.5)";
-    setTimeout(() => { div.style.transform = "scale(1)"; }, 300);
+.form-box form{
+margin-bottom:40px;
 }
 
-function updateScoreboard() {
-    document.getElementById("scoreboard").innerHTML = `Runs: ${runs} | Balls: ${balls} | Wickets: ${wickets}`;
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:8px;
+border:1px solid #ccc;
 }
 
-function resetGame() {
-    runs = 0;
-    balls = 0;
-    wickets = 0;
-    updateScoreboard();
-    document.getElementById("outcome").textContent = "";
-    alert("Game reset! Start again.");
-}
-</script>
-
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fun Cricket Game</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background: linear-gradient(to bottom, #80deea, #e0f7fa);
-    padding: 50px;
-  }
-  h1 {
-    color: #006064;
-  }
-  button {
-    padding: 10px 20px;
-    font-size: 16px;
-    margin: 10px;
-    cursor: pointer;
-    border-radius: 8px;
-    border: none;
-    background-color: #00796b;
-    color: white;
-    transition: 0.3s;
-  }
-  button:hover {
-    background-color: #004d40;
-  }
-  #scoreboard {
-    margin-top: 20px;
-    font-size: 22px;
-    font-weight: bold;
-  }
-  #outcome {
-    margin-top: 20px;
-    font-size: 24px;
-    height: 30px;
-    font-weight: bold;
-  }
-  #ball {
-    margin: 30px auto;
-    width: 30px;
-    height: 30px;
-    background-color: red;
-    border-radius: 50%;
-    position: relative;
-    animation: none;
-  }
-  @keyframes throwBall {
-    0% {top: 0;}
-    50% {top: -100px;}
-    100% {top: 0;}
-  }
-</style>
-</head>
-<body>
-
-<h1>Cricket Game (1, 4, 6, W)</h1>
-<p>Click "Hit Ball" to play!</p>
-<button onclick="hitBall()">Hit Ball</button>
-<button onclick="resetGame()">Reset Game</button>
-
-<div id="scoreboard">Runs: 0 | Balls: 0 | Wickets: 0</div>
-<div id="outcome"></div>
-<div id="ball"></div>
-
-<script>
-let runs = 0;
-let balls = 0;
-let wickets = 0;
-const maxBalls = 6;
-const maxWickets = 3;
-
-function hitBall() {
-  if (balls >= maxBalls || wickets >= maxWickets) {
-    alert("Game Over! Please reset.");
-    return;
-  }
-
-  balls++;
-
-  const outcomes = [1, 4, 6, "W"];
-  const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
-
-  const ballDiv = document.getElementById("ball");
-  ballDiv.style.animation = "throwBall 0.5s ease";
-  setTimeout(() => { ballDiv.style.animation = "none"; }, 500);
-
-  if (outcome === "W") {
-    wickets++;
-    showOutcome("WICKET! 😢", "#b71c1c");
-  } else if (outcome === 4) {
-    runs += outcome;
-    showOutcome("FOUR! 🏏", "#1b5e20");
-  } else if (outcome === 6) {
-    runs += outcome;
-    showOutcome("SIX! 🎉", "#1b5e20");
-  } else {
-    runs += outcome;
-    showOutcome("You scored 1 run!", "#1b5e20");
-  }
-
-  updateScoreboard();
-
-  if (balls === maxBalls || wickets === maxWickets) {
-    setTimeout(() => alert(`Game Over! Total Runs: ${runs}`), 100);
-  }
+button{
+width:100%;
+padding:12px;
+background:#6c8cff;
+border:none;
+color:#fff;
+border-radius:8px;
+cursor:pointer;
 }
 
-function showOutcome(text, color) {
-  const div = document.getElementById("outcome");
-  div.textContent = text;
-  div.style.color = color;
-  div.style.transform = "scale(1.5)";
-  setTimeout(() => { div.style.transform = "scale(1)"; }, 300);
+.info-box{
+width:50%;
+height:100%;
+background:#6c8cff;
+color:#fff;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+position:absolute;
+left:0;
+transition:.6s;
 }
 
-function updateScoreboard() {
-  document.getElementById("scoreboard").innerHTML = `Runs: ${runs} | Balls: ${balls} | Wickets: ${wickets}`;
+.container.active .form-box{right:50%;}
+.container.active .info-box{left:50%;}
+
+@media(max-width:768px){
+.container{width:95%;height:auto}
+.form-box,.info-box{
+position:relative;
+width:100%;
 }
-
-function resetGame() {
-  runs = 0;
-  balls = 0;
-  wickets = 0;
-  updateScoreboard();
-  document.getElementById("outcome").textContent = "";
-  alert("Game reset! Start again.");
-}
-</script>
-
-</body>
-</html><!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interactive Cricket Game</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background: linear-gradient(to bottom, #80deea, #e0f7fa);
-    padding: 50px;
-  }
-  h1 {
-    color: #006064;
-  }
-  button {
-    padding: 10px 20px;
-    font-size: 16px;
-    margin: 10px;
-    cursor: pointer;
-    border-radius: 8px;
-    border: none;
-    background-color: #00796b;
-    color: white;
-    transition: 0.3s;
-  }
-  button:hover {
-    background-color: #004d40;
-  }
-  #scoreboard {
-    margin-top: 20px;
-    font-size: 22px;
-    font-weight: bold;
-  }
-  #outcome {
-    margin-top: 20px;
-    font-size: 24px;
-    height: 30px;
-    font-weight: bold;
-  }
-  #gameArea {
-    position: relative;
-    width: 300px;
-    height: 200px;
-    margin: 30px auto;
-    background-color: #a5d6a7;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  #ball {
-    width: 20px;
-    height: 20px;
-    background-color: red;
-    border-radius: 50%;
-    position: absolute;
-    bottom: 0;
-    left: 140px;
-    transition: all 0.5s ease;
-  }
-  #bat {
-    width: 60px;
-    height: 10px;
-    background-color: brown;
-    position: absolute;
-    bottom: 0;
-    left: 120px;
-  }
-</style>
-</head>
-<body>
-
-<h1>Interactive Cricket Game</h1>
-<p>Click "Hit Ball" to play!</p>
-<button onclick="hitBall()">Hit Ball</button>
-<button onclick="resetGame()">Reset Game</button>
-
-<div id="scoreboard">Runs: 0 | Balls: 0 | Wickets: 0</div>
-<div id="outcome"></div>
-
-<div id="gameArea">
-  <div id="ball"></div>
-  <div id="bat"></div>
-</div>
-
-<script>
-let runs = 0;
-let balls = 0;
-let wickets = 0;
-const maxBalls = 6;
-const maxWickets = 3;
-
-function hitBall() {
-  if (balls >= maxBalls || wickets >= maxWickets) {
-    alert("Game Over! Please reset.");
-    return;
-  }
-
-  balls++;
-
-  const outcomes = [1, 4, 6, "W"];
-  const outcome = outcomes[Math.floor(Math.random() * outcomes.length)];
-
-  const ballDiv = document.getElementById("ball");
-  
-  // Ball animation
-  const hitPosition = Math.floor(Math.random() * 220); // move ball left-right randomly
-  ballDiv.style.left = hitPosition + "px";
-  ballDiv.style.bottom = "150px";
-  setTimeout(() => { ballDiv.style.bottom = "0px"; }, 300);
-
-  if (outcome === "W") {
-    wickets++;
-    showOutcome("WICKET! 😢", "#b71c1c");
-  } else if (outcome === 4) {
-    runs += outcome;
-    showOutcome("FOUR! 🏏", "#1b5e20");
-  } else if (outcome === 6) {
-    runs += outcome;
-    showOutcome("SIX! 🎉", "#1b5e20");
-  } else {
-    runs += outcome;
-    showOutcome("You scored 1 run!", "#1b5e20");
-  }
-
-  updateScoreboard();
-
-  if (balls === maxBalls || wickets === maxWickets) {
-    setTimeout(() => alert(`Game Over! Total Runs: ${runs}`), 500);
-  }
-}
-
-function showOutcome(text, color) {
-  const div = document.getElementById("outcome");
-  div.textContent = text;
-  div.style.color = color;
-  div.style.transform = "scale(1.5)";
-  setTimeout(() => { div.style.transform = "scale(1)"; }, 300);
-}
-
-function updateScoreboard() {
-  document.getElementById("scoreboard").innerHTML = `Runs: ${runs} | Balls: ${balls} | Wickets: ${wickets}`;
-}
-
-function resetGame() {
-  runs = 0;
-  balls = 0;
-  wickets = 0;
-  updateScoreboard();
-  document.getElementById("outcome").textContent = "";
-  document.getElementById("ball").style.left = "140px";
-  document.getElementById("ball").style.bottom = "0px";
-  alert("Game reset! Start again.");
-}
-</script>
-
-</body>
-</html>
+}<?php
+session_destroy();
+header("Location:index.html");
+?>
+    
